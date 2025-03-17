@@ -20,7 +20,7 @@ void decryptSingleFile(const fs::path& filePath) {
 
     std::string userProfilePath = getUserProfilePath();
     if (userProfilePath.empty()) {
-        warn("Failed to get user profile path!") << std::endl;
+        warn("Failed to get user profile path!") << '\n';
         return;
     }
 
@@ -33,11 +33,11 @@ void decryptSingleFile(const fs::path& filePath) {
     std::getline(keys, ivBase64);
 
     if (keyBase64.empty() || ivBase64.empty()) {
-        warn("File keys.txt does not contain key or IV") << std::endl;
+        warn("File keys.txt does not contain key or IV") << '\n';
         return;
     }
-    info("keyBase64: ") << keyBase64 << "\n";
-    info("ivBase64: ") << ivBase64 << "\n";
+    info("keyBase64: ") << keyBase64 << '\n';
+    info("ivBase64: ") << ivBase64 << '\n';
 
     CryptoPP::SecByteBlock key_decrypted(CryptoPP::AES::DEFAULT_KEYLENGTH);
     CryptoPP::SecByteBlock iv_decrypted(CryptoPP::AES::BLOCKSIZE);
@@ -61,8 +61,8 @@ void decryptSingleFile(const fs::path& filePath) {
     inputFile.close();
     std::string decrypted;
 
-    info("IV size: ") << iv_decrypted.size() << std::endl;
-    info("Key size: ") << key_decrypted.size() << std::endl;
+    info("IV size: ") << iv_decrypted.size() << '\n';
+    info("Key size: ") << key_decrypted.size() << '\n';
 
     decrypter.SetKeyWithIV(key_decrypted, key_decrypted.size(), iv_decrypted);
     okay("Keys are set well \n");
@@ -80,7 +80,7 @@ void decryptSingleFile(const fs::path& filePath) {
         );
     }
     catch (const CryptoPP::Exception& e) {
-        warn("Can't decrypt file: ") << filePath << ": " << e.what() << std::endl;
+        warn("Can't decrypt file: ") << filePath << ": " << e.what() << '\n';
         return;
     }
     info("After decryption data \n");
@@ -99,11 +99,11 @@ void decryptSingleFile(const fs::path& filePath) {
     try
     {
         fs::rename(filePath, newFilePath);
-        okay("Decrypted and renamed file: ") << newFilePath << std::endl;
+        okay("Decrypted and renamed file: ") << newFilePath << '\n';
     }
     catch (const fs::filesystem_error& e)
     {
-        warn("Error while renaming file: ") << e.what() << std::endl;
+        warn("Error while renaming file: ") << e.what() << '\n';
     }
 
     okay("File has been successfully decrypted! \n");

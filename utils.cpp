@@ -21,7 +21,7 @@ std::vector<fs::path> findFiles(const fs::path& folder, const std::vector<std::s
 
     if (!fs::exists(folder) || !fs::is_directory(folder))
     {
-        warn("Folder does not exist or is not a directory: ") << folder << std::endl;
+        warn("Folder does not exist or is not a directory: ") << folder << '\n';
         return files;
     }
 
@@ -38,10 +38,10 @@ std::vector<fs::path> findFiles(const fs::path& folder, const std::vector<std::s
             catch (const fs::filesystem_error& e)
             {
                 warn("Skipping (error in is_directory()): ") << e.what()
-                    << " -> " << entry.path() << std::endl;
+                    << " -> " << entry.path() << '\n';
                 continue;
             }
-            info("Checking: ") << entry.path() << std::endl;
+            info("Checking: ") << entry.path() << '\n';
             if (entryIsDir)
             {
                 DWORD attrs = GetFileAttributesW(entry.path().wstring().c_str());
@@ -49,7 +49,7 @@ std::vector<fs::path> findFiles(const fs::path& folder, const std::vector<std::s
                     (attrs & FILE_ATTRIBUTE_HIDDEN || attrs & FILE_ATTRIBUTE_SYSTEM))
                 {
                     info("Skipping hidden/system folder: ")
-                        << entry.path() << std::endl;
+                        << entry.path() << '\n';
                     continue;
                 }
             }
@@ -61,7 +61,7 @@ std::vector<fs::path> findFiles(const fs::path& folder, const std::vector<std::s
             catch (const fs::filesystem_error& e)
             {
                 warn("Skipping (error in is_regular_file()): ") << e.what()
-                    << " -> " << entry.path() << std::endl;
+                    << " -> " << entry.path() << '\n';
                 continue;
             }
 
@@ -77,11 +77,12 @@ std::vector<fs::path> findFiles(const fs::path& folder, const std::vector<std::s
     }
     catch (const fs::filesystem_error& e)
     {
-        warn("filesystem_error in loop: ") << e.what() << std::endl;
+        warn("filesystem_error in loop: ") << e.what() << '\n';
     }
 
     return files;
 }
+
 bool matchesAnyExtension(const std::string& extension, const std::vector<std::string>& supportedExtensions) {
     for (const auto& ext : supportedExtensions) {
         if (extension == ext) {
@@ -90,13 +91,14 @@ bool matchesAnyExtension(const std::string& extension, const std::vector<std::st
     }
     return false;
 }
+
 std::string getUserProfilePath() {
     char userProfile[MAX_PATH];
     if (GetEnvironmentVariable("USERPROFILE", userProfile, MAX_PATH)) {
         return std::string(userProfile) + "\\dir";
     }
     else {
-        warn("Can't get the path");
+        warn("Can't get the path\n");
         return "";
     }
 }

