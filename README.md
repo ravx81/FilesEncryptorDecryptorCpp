@@ -68,6 +68,39 @@ vcpkg install cryptopp
    ```
 
 
+## 🔄 Customization
+
+### **Change the Ciphering Directory**
+By default, the encryption directory is set to:
+```cpp
+return std::string(userProfile) + "\\dir";
+```
+This means files will be stored in:
+```
+C:\Users\User\dir
+```
+You can modify this path to store encrypted files elsewhere by changing the `"dir"` string in the source code.
+
+### **Change the Encrypted File Extension**
+By default, encrypted files will have the extension:
+```cpp
+const std::vector<std::string> extension = { ".cipher81" };
+```
+If you want to change the extension, modify `".cipher81"` to your preferred file extension, e.g., `.enc`.
+
+### **Change the Target File Extensions**
+The program looks for files with specific extensions to encrypt. By default, it searches for:
+```cpp
+const std::vector<std::string> exampleExtensions = { ".txt" };
+```
+You can add more file types or change them based on your needs, for example:
+```cpp
+const std::vector<std::string> exampleExtensions = { ".txt", ".docx", ".pdf" };
+```
+This will allow the program to find and encrypt `.txt`, `.docx`, and `.pdf` files.
+
+---
+
 ## 📜 License
 This project is licensed under the MIT License.
 
