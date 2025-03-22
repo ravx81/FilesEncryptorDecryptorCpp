@@ -1,6 +1,6 @@
 # FilesEncryptorDecryptorCpp
 
-This is a C++ project for encrypting and decrypting files using the **Crypto++** library.
+This is a C++ project for encrypting and decrypting files using the **Crypto++** library with the AES algorithm.
 
 ## 🔧 Installation
 
